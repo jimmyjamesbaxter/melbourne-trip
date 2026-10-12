@@ -1,5 +1,5 @@
 /* Melbourne planner service worker: app shell + photos offline; map tiles cached as you view them (not the whole map) */
-const V="mel-shell-v5",IMG="mel-img-flat-v1",TILES="mel-tiles-v1",MAXT=1500;
+const V="mel-shell-v7",IMG="mel-img-flat-v1",TILES="mel-tiles-v1",MAXT=1500;
 const SHELL=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","https://unpkg.com/leaflet@1.9.4/dist/leaflet.css","https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(new Request(u,{mode:u.startsWith("http")?"cors":"same-origin",cache:"reload"})).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>![V,IMG,TILES].includes(k)).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
