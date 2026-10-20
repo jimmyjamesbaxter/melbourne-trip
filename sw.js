@@ -1,5 +1,5 @@
 /* Melbourne planner service worker: app shell + photos offline; map tiles cached as you view them (not the whole map) */
-const V="mel-shell-flat-v34",IMG="mel-img-flat-v1",TILES="mel-tiles-v2",MAXT=1500;
+const V="mel-shell-flat-v32",IMG="mel-img-flat-v1",TILES="mel-tiles-v2",MAXT=1500;
 /* r11: an install must get index.html, or it doesn't install and the old worker keeps its offline copy. The rest is best effort. ("./" was the same page, downloaded twice.) */
 const PAGE="./index.html",SHELL=["./manifest.webmanifest","./icon-192.png","./icon-512.png","https://unpkg.com/leaflet@1.9.4/dist/leaflet.css","https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"];
 /* r11: which of the two pages a same-origin path is, or null. "index"/"family" cover hosts that drop the .html */
@@ -22,7 +22,7 @@ self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;c
   if(/jsonblob\.com$/.test(u.hostname))return; /* sync: always live */
   if(u.hostname==="router.project-osrm.org")return; /* app keeps its own OSRM cache */
   const pg=same&&pageOf(u.pathname);
-  if(pg){e.respondWith(fetch(r.url,{cache:"no-cache",credentials:"same-origin"})/* fix: always revalidate the page with the server instead of taking a stale copy from the browser cache */.then(res=>{const cp=pageCopy(res.clone(),pg);if(cp)caches.open(V).then(c=>c.put(pg,cp)).catch(()=>{});return res})
+  if(pg){e.respondWith(fetch(r).then(res=>{const cp=pageCopy(res.clone(),pg);if(cp)caches.open(V).then(c=>c.put(pg,cp)).catch(()=>{});return res})
     .catch(()=>caches.match(pg,{ignoreSearch:true}).then(x=>x||Response.error())));return}
   if(same&&/\/img(\/|__)/.test(u.pathname)){ /* r11: the app's photos are under img/ (img/v2/…, img/v3/…) */
     e.respondWith(caches.match(r,{ignoreSearch:true}).then(hit=>hit||fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(IMG).then(c=>c.put(r,cp)).catch(()=>{})}return res})));return}
