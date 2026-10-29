@@ -1,5 +1,5 @@
 /* Melbourne planner service worker: app shell + photos offline; map tiles cached as you view them (not the whole map) */
-const V="mel-shell-flat-v70",IMG="mel-img-flat-v1",TILES="mel-tiles-v2",MAXT=1500;
+const V="mel-shell-flat-v71",IMG="mel-img-flat-v1",TILES="mel-tiles-v2",MAXT=1500;
 /* r11: an install must get index.html, or it doesn't install and the old worker keeps its offline copy. The rest is best effort. ("./" was the same page, downloaded twice.) */
 const PAGE="./index.html",SHELL=["./manifest.webmanifest","./icon-192.png","./icon-512.png","https://unpkg.com/leaflet@1.9.4/dist/leaflet.css","https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"];
 /* r11: which of the two pages a same-origin path is, or null. "index"/"family" cover hosts that drop the .html */
